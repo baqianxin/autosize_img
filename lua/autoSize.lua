@@ -47,7 +47,7 @@ function getImgSize(img)
 end
 
 -- 开始执行
--- ngx.log(ngx.ERR, getFileDir(ngx.var.img_file));
+ngx.log(ngx.ERR, getFileDir(ngx.var.img_file));
 
 local gm_path = 'gm'
 
@@ -60,6 +60,9 @@ end
 local uri = ngx.var.img_size
 local width = string.sub(uri,1,1)
 local height = 0
+
+local quality = ngx.var.img_quality
+--ngx.log(ngx.ERR,quality)
 
 if width == "-" then
   width = 0
@@ -84,7 +87,7 @@ if (file_exists(ngx.var.request_filepath)) then
     end
 
 -- 由于压缩后比较模糊,默认图片质量为100,请根据自己情况修改quality
-    cmd = cmd .. " -quality 100"
+    cmd = cmd .. " -quality ".. quality
     cmd = cmd .. " +profile \"*\" " .. ngx.var.img_file;
     ngx.log(ngx.ERR, cmd);
     os.execute(cmd);

@@ -1,5 +1,4 @@
 -- 根据输入长和宽的尺寸裁切图片
-
 -- 检测路径是否目录
 local function is_dir(sPath)
     if type(sPath) ~= "string" then return false end
@@ -43,9 +42,10 @@ function getExtension(filename)
 end
 
 -- 开始执行
--- ngx.log(ngx.ERR, getFileDir(ngx.var.img_file));
+--ngx.log(ngx.ERR, getFileDir(ngx.var.img_file));
 
 local gm_path = 'gm'
+local quality = '10'
 
 -- check image dir
 if not is_dir(getFileDir(ngx.var.img_file)) then
@@ -63,11 +63,13 @@ if (file_exists(ngx.var.request_filepath)) then
     cmd = cmd .. " -gravity center -extent " .. ngx.var.img_width .. "x" .. ngx.var.img_height
 
     -- 由于压缩后比较模糊,默认图片质量为100,请根据自己情况修改quality
-    cmd = cmd .. " -quality 100"
+    cmd = cmd .. " -quality " .. quality
     cmd = cmd .. " +profile \"*\" " .. ngx.var.img_file;
 --  ngx.log(ngx.ERR, cmd);
     os.execute(cmd);
     ngx.exec(ngx.var.uri);
 else
-    ngx.exit(ngx.HTTP_NOT_FOUND);
+    ngx.log(ngx.ERR, ngx.var.request_filepath);
+    ngx.exit(405);
+--    ngx.exit(ngx.HTTP_NOT_FOUND);
 end
